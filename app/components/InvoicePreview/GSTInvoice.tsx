@@ -138,11 +138,6 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
                   <td>{transport.poNo || '-'}</td>
                 </tr>
                 <tr>
-                  <td className="info-label">LR / GR No.</td>
-                  <td>:</td>
-                  <td>{transport.lrGrNo || '-'}</td>
-                </tr>
-                <tr>
                   <td className="info-label">Date of Supply</td>
                   <td>:</td>
                   <td>{transport.dateOfSupply ? formatDate(transport.dateOfSupply) : '-'}</td>

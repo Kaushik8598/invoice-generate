@@ -52,9 +52,6 @@ const DEFAULT_FORM: InvoiceFormData = {
   transport: {
     transporterName: '',
     vehicleNo: '',
-    lrGrNo: '',
-    transportDate: '',
-    ewayBillNo: '',
     transportMode: '',
     poNo: '',
     dateOfSupply: '',

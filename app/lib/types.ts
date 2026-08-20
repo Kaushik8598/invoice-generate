@@ -4,9 +4,6 @@ export type TaxType = 'none' | 'cgst_sgst' | 'igst';
 export interface TransportDetails {
   transporterName: string;
   vehicleNo: string;
-  lrGrNo: string;
-  transportDate: string;
-  ewayBillNo: string;
   transportMode: string;
   poNo: string;
   dateOfSupply: string;
