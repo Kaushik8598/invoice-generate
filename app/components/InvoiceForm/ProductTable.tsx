@@ -161,26 +161,27 @@ export default function ProductTable({ products, taxType, invoiceType, onAdd, on
                   </tr>
                   {showTax && (
                     <tr className="product-tax-row">
-                      <td></td>
-                      <td colSpan={isRegular ? 5 : 4} className="tax-breakdown-cell">
-                        <span className="tax-info">
-                          Taxable: ₹{formatCurrency(computed.taxableAmt)}
-                          {computed.discountAmt > 0 && ` (Disc: ₹${formatCurrency(computed.discountAmt)})`}
-                        </span>
-                        {showCGSTSGST && (
+                      <td>&nbsp;</td>
+                      <td colSpan={9} className="tax-breakdown-cell">
+                        <div className="tax-breakdown-line">
                           <span className="tax-info">
-                            CGST({computed.cgstPct}%): ₹{formatCurrency(computed.cgstAmt)}
-                            &nbsp;|&nbsp;
-                            SGST({computed.sgstPct}%): ₹{formatCurrency(computed.sgstAmt)}
+                            Taxable: ₹{formatCurrency(computed.taxableAmt)}
+                            {computed.discountAmt > 0 && ` (Disc: ₹${formatCurrency(computed.discountAmt)})`}
                           </span>
-                        )}
-                        {showIGST && (
-                          <span className="tax-info">
-                            IGST({computed.igstPct}%): ₹{formatCurrency(computed.igstAmt)}
-                          </span>
-                        )}
+                          {showCGSTSGST && (
+                            <span className="tax-info">
+                              CGST({computed.cgstPct}%): ₹{formatCurrency(computed.cgstAmt)}
+                              &nbsp;|&nbsp;
+                              SGST({computed.sgstPct}%): ₹{formatCurrency(computed.sgstAmt)}
+                            </span>
+                          )}
+                          {showIGST && (
+                            <span className="tax-info">
+                              IGST({computed.igstPct}%): ₹{formatCurrency(computed.igstAmt)}
+                            </span>
+                          )}
+                        </div>
                       </td>
-                      <td colSpan={showTax ? 3 : 2}></td>
                     </tr>
                   )}
                 </React.Fragment>

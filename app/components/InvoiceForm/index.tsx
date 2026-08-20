@@ -12,13 +12,14 @@ import ProductTable from './ProductTable';
 import SummarySection from './SummarySection';
 import InvoicePreview from '../InvoicePreview';
 
+let prodCounter = 1;
 function generateId() {
-  return Math.random().toString(36).slice(2, 10);
+  return `prod-${Date.now()}-${prodCounter++}`;
 }
 
 function getDefaultProduct(): ProductRow {
   return {
-    id: generateId(),
+    id: 'prod-1',
     name: '',
     description: '',
     hsn: '',
@@ -34,20 +35,19 @@ function getDefaultProduct(): ProductRow {
 const today = new Date().toISOString().split('T')[0];
 
 /** Generate a date-based invoice number: INV-YYYYMMDD-XXX */
-function generateInvoiceNo(): string {
+function generateInvoiceNo(randomize = false): string {
   const now = new Date();
   const y = now.getFullYear();
   const m = String(now.getMonth() + 1).padStart(2, '0');
   const d = String(now.getDate()).padStart(2, '0');
-  // Random 3-digit suffix as a placeholder until backend provides a real sequence
-  const seq = String(Math.floor(Math.random() * 900) + 100);
+  const seq = randomize ? String(Math.floor(Math.random() * 900) + 100) : '001';
   return `INV-${y}${m}${d}-${seq}`;
 }
 
 const DEFAULT_FORM: InvoiceFormData = {
   invoiceType: 'gst',
   taxType: 'cgst_sgst',
-  invoiceNo: generateInvoiceNo(),
+  invoiceNo: generateInvoiceNo(false),
   invoiceDate: today,
   transport: {
     transporterName: '',
@@ -91,6 +91,14 @@ export default function InvoiceForm() {
   const [formData, setFormData] = useState<InvoiceFormData>(DEFAULT_FORM);
   const [showPreview, setShowPreview] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
+
+  // Generate randomized invoice number on client mount only to prevent SSR hydration mismatch
+  React.useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      invoiceNo: generateInvoiceNo(true),
+    }));
+  }, []);
 
   // Computed products and totals
   const computedProducts = useMemo(
@@ -201,16 +209,6 @@ export default function InvoiceForm() {
         </div>
       </div>
 
-      {/* Validation Errors */}
-      {errorList.length > 0 && (
-        <div className="validation-errors" role="alert">
-          <strong>⚠ Please fix the following errors:</strong>
-          <ul>
-            {errorList.map((err, i) => <li key={i}>{err}</li>)}
-          </ul>
-        </div>
-      )}
-
       <div className="form-body">
         <InvoiceTypeSection
           data={{ invoiceType: formData.invoiceType, taxType: formData.taxType }}
@@ -260,6 +258,16 @@ export default function InvoiceForm() {
           taxType={formData.invoiceType === 'gst' ? formData.taxType : 'none'}
           invoiceType={formData.invoiceType}
         />
+
+        {/* Validation Errors */}
+        {errorList.length > 0 && (
+          <div className="validation-errors" role="alert">
+            <strong>⚠ Please fix the following errors:</strong>
+            <ul>
+              {errorList.map((err, i) => <li key={i}>{err}</li>)}
+            </ul>
+          </div>
+        )}
 
 
         {/* Action Buttons */}

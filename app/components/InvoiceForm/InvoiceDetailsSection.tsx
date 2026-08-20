@@ -20,7 +20,9 @@ export default function InvoiceDetailsSection({ data, onChange }: Props) {
         <div className="field-group">
           <label className="field-label">Invoice Number</label>
           <div className="auto-field">
-            <span className="auto-field-value">{data.invoiceNo}</span>
+            <span className="auto-field-value" suppressHydrationWarning>
+              {data.invoiceNo}
+            </span>
             <span className="auto-field-badge">Auto Generated</span>
           </div>
           {/* <span className="field-hint">Will be assigned from the backend once implemented.</span> */}
