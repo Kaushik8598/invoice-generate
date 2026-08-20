@@ -5,6 +5,13 @@ import type { ComputedProduct, InvoiceFormData, InvoiceTotals } from '../../lib/
 import { COMPANY, APPEARANCE } from '../../lib/constants';
 import { formatCurrency } from '../../lib/calculations';
 import { amountInWords } from '../../lib/amountInWords';
+import {
+  MapPin,
+  Phone,
+  Mail,
+  FileText,
+  Landmark,
+} from 'lucide-react';
 
 interface Props {
   formData: InvoiceFormData;
@@ -14,6 +21,10 @@ interface Props {
 
 function formatDate(dateStr: string): string {
   if (!dateStr) return '-';
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
   const d = new Date(dateStr);
   return d.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
@@ -33,16 +44,22 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
         <div className="inv-header-left">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={APPEARANCE.logoUrl} alt="Company Logo" className="inv-logo" />
-          <div className="inv-company-info">
-            <div className="inv-tagline">{COMPANY.tagline}</div>
-          </div>
         </div>
         <div className="inv-header-right">
           <div className="inv-title" style={{ color: pc }}>TAX INVOICE</div>
           <div className="inv-copy-boxes">
-            <div className="copy-box"><span className="copy-check">☐</span> Original for Recipient</div>
-            <div className="copy-box"><span className="copy-check">☐</span> Duplicate for Transporter</div>
-            <div className="copy-box"><span className="copy-check">☐</span> Triplicate for Suppliers</div>
+            <div className="copy-box">
+              <span className="copy-checkbox"></span>
+              <span>Original for Recipient</span>
+            </div>
+            <div className="copy-box">
+              <span className="copy-checkbox"></span>
+              <span>Duplicate for Transporter</span>
+            </div>
+            <div className="copy-box">
+              <span className="copy-checkbox"></span>
+              <span>Triplicate for Suppliers</span>
+            </div>
           </div>
         </div>
       </div>
@@ -50,15 +67,17 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
       {/* ── ADDRESS BAR ── */}
       <div className="inv-address-bar">
         <div className="inv-addr-item">
-          <span className="addr-icon">📍</span>
+          <MapPin className="inv-icon" size={13} style={{ color: pc }} />
           <span>{COMPANY.address}</span>
         </div>
+        <div className="inv-addr-divider">|</div>
         <div className="inv-addr-item">
-          <span className="addr-icon">📞</span>
+          <Phone className="inv-icon" size={13} style={{ color: pc }} />
           <span>{COMPANY.phone}</span>
         </div>
+        <div className="inv-addr-divider">|</div>
         <div className="inv-addr-item">
-          <span className="addr-icon">✉</span>
+          <Mail className="inv-icon" size={13} style={{ color: pc }} />
           <span>{COMPANY.email}</span>
         </div>
       </div>
@@ -73,7 +92,8 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
       <div className="inv-info-row">
         <div className="inv-bill-to-box">
           <div className="inv-box-header" style={{ backgroundColor: pc }}>
-            <span className="box-icon">🧾</span> BILL TO
+            <FileText size={13} className="box-lucide-icon" />
+            <span>BILL TO</span>
           </div>
           <div className="inv-box-body">
             <div className="inv-customer-name">{billedTo.name || 'Customer Name'}</div>
@@ -88,9 +108,9 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
                 <span>GST NO. &nbsp;: &nbsp;{billedTo.gstin}</span>
               </div>
             )}
-            {billedTo.gstin && COMPANY.pan && (
+            {COMPANY.pan && (
               <div className="inv-gst-pan">
-                <span>PAN NO. &nbsp;: &nbsp;</span>
+                <span>PAN NO. &nbsp;: &nbsp;{COMPANY.pan}</span>
               </div>
             )}
           </div>
@@ -98,20 +118,21 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
 
         <div className="inv-bill-info-box">
           <div className="inv-box-header" style={{ backgroundColor: pc }}>
-            <span className="box-icon">🧾</span>
+            <FileText size={13} className="box-lucide-icon" />
+            <span>INVOICE DETAILS</span>
           </div>
           <div className="inv-box-body">
             <table className="inv-info-table">
               <tbody>
                 <tr>
                   <td className="info-label">Bill No.</td>
-                  <td>:</td>
-                  <td>{invoiceNo || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{invoiceNo || '-'}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Date</td>
-                  <td>:</td>
-                  <td>{formatDate(invoiceDate)}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{formatDate(invoiceDate)}</td>
                 </tr>
               </tbody>
             </table>
@@ -120,7 +141,7 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
       </div>
 
       {/* ── PRODUCT TABLE ── */}
-      <table className="inv-product-table" style={{ '--inv-header-color': pc } as React.CSSProperties}>
+      <table className="inv-product-table regular-product-table">
         <thead>
           <tr style={{ backgroundColor: pc, color: '#fff' }}>
             <th className="col-sr">Sr.</th>
@@ -134,7 +155,7 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
         </thead>
         <tbody>
           {computedProducts.map((p, i) => (
-            <tr key={p.id} className={i % 2 === 1 ? 'row-alt' : ''}>
+            <tr key={p.id} className={`inv-product-row ${i % 2 === 1 ? 'row-alt' : ''}`}>
               <td className="text-center">{i + 1}</td>
               <td>
                 <div className="prod-name">{p.name}</div>
@@ -147,12 +168,17 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
               <td className="text-right">{formatCurrency(p.taxableAmt)}</td>
             </tr>
           ))}
-          {/* Blank rows for visual spacing */}
-          {computedProducts.length < 6 && Array.from({ length: Math.max(0, 6 - computedProducts.length) }).map((_, i) => (
-            <tr key={`blank-${i}`} className="blank-row">
-              <td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td>
-            </tr>
-          ))}
+
+          {/* Dynamic blank filler row to stretch vertical borders to bottom */}
+          <tr className="inv-blank-filler-row">
+            <td className="text-center">&nbsp;</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
         </tbody>
         <tfoot>
           <tr className="inv-gstin-row">
@@ -160,7 +186,7 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
               <span>GSTIN : {COMPANY.gstin}</span>
               <span className="ml-4">PAN NO : {COMPANY.pan}</span>
             </td>
-            <td colSpan={2} className="text-right font-bold">Total</td>
+            <td colSpan={2} className="text-right font-bold" style={{ color: pc }}>Total</td>
             <td className="text-right font-bold" style={{ color: pc }}>
               ₹ {formatCurrency(totals.totalTaxable)}
             </td>
@@ -173,15 +199,16 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
         {/* Bank Details */}
         <div className="inv-bank-box">
           <div className="inv-box-header" style={{ backgroundColor: pc }}>
-            <span className="box-icon">🏦</span> BANK DETAILS
+            <Landmark size={13} className="box-lucide-icon" />
+            <span>BANK DETAILS</span>
           </div>
           <div className="inv-box-body">
             <table className="inv-bank-table">
               <tbody>
-                <tr><td>Bank Name</td><td>:</td><td>{COMPANY.bank.name}</td></tr>
-                <tr><td>Account No</td><td>:</td><td>{COMPANY.bank.accountNo}</td></tr>
-                <tr><td>IFSC Code</td><td>:</td><td>{COMPANY.bank.ifsc}</td></tr>
-                <tr><td>Branch</td><td>:</td><td>{COMPANY.bank.branch}</td></tr>
+                <tr><td className="bank-lbl">Bank Name</td><td className="bank-sep">:</td><td className="bank-val">{COMPANY.bank.name}</td></tr>
+                <tr><td className="bank-lbl">Account No</td><td className="bank-sep">:</td><td className="bank-val">{COMPANY.bank.accountNo}</td></tr>
+                <tr><td className="bank-lbl">IFSC Code</td><td className="bank-sep">:</td><td className="bank-val">{COMPANY.bank.ifsc}</td></tr>
+                <tr><td className="bank-lbl">Branch</td><td className="bank-sep">:</td><td className="bank-val">{COMPANY.bank.branch}</td></tr>
               </tbody>
             </table>
           </div>
@@ -206,8 +233,8 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
             </tbody>
             <tfoot>
               <tr className="grand-total-row" style={{ backgroundColor: pc, color: '#fff' }}>
-                <td>Grand Total</td>
-                <td className="text-right">₹ {formatCurrency(totals.grandTotal)}</td>
+                <td className="font-bold">Grand Total</td>
+                <td className="text-right font-bold">₹ {formatCurrency(totals.grandTotal)}</td>
               </tr>
             </tfoot>
           </table>
@@ -224,11 +251,12 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
       <div className="inv-footer-row">
         <div className="inv-terms-box">
           <div className="inv-box-header" style={{ backgroundColor: pc }}>
-            <span className="box-icon">📋</span> TERMS &amp; CONDITIONS
+            <FileText size={13} className="box-lucide-icon" />
+            <span>TERMS &amp; CONDITIONS</span>
           </div>
           <div className="inv-box-body">
             <ol className="terms-list">
-              {COMPANY.terms.slice(0, 3).map((t, i) => <li key={i}>{t}</li>)}
+              {COMPANY.regularTerms.map((t, i) => <li key={i}>{t}</li>)}
             </ol>
           </div>
         </div>
@@ -241,7 +269,7 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
 
       {/* ── THANK YOU ── */}
       <div className="inv-thankyou" style={{ color: pc }}>
-        — Thank you for your business! —
+        Thank you for your business!
       </div>
     </div>
   );

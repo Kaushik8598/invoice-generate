@@ -2,8 +2,8 @@ export const COMPANY = {
   name: 'SHIV GRAPHICS & ELEVATION',
   shortName: 'SHIV GRAPHICS',
   tagline: 'We make Your Brands First Impression',
-  address: 'Shop No. 8, Chitrakut Shopping Nr. Vitthal Nagar Soc, Varachha Main Road, Hira Baug, Surat - 395006, Gujarat',
-  phone: 'M. 9998842333, 9033377931',
+  address: 'Shop No. 8, Chitrakut Shopping Nr. Vitthal Nagar Soc., Hira Baug, Surat - 395006',
+  phone: '9033377931',
   email: 'shivgraphics111@gmail.com',
   gstin: '24CSQPM5914H1ZF',
   pan: 'AACCS1234A',
@@ -13,15 +13,20 @@ export const COMPANY = {
     ifsc: 'HDFC0001704',
     branch: 'PUNA KUMBHARIYA',
   },
-  terms: [
+  gstTermsLeft: [
+    'Amount of Tax Subject to Reverse Charges.',
+    'Our Liability & responsibility ceases as soon as the goods leave our premises.',
+    'Interest @ 18% will be charged on all over due payments.',
+  ],
+  gstTermsRight: [
+    'Goods once sold will not be taken back in any cases.',
+    'No allowances for shortages or difference in quality will be allowed unless the notice for the same is given within 24 hrs. after rejection of Goods.',
+    'Subject to the Ankleshwar Jurisdiction.',
+  ],
+  regularTerms: [
     'Payment will be accepted only by A/c. Payee Draft/Cheque.',
     'Interest @18% p.a. will be charged on account if not paid within due period.',
     'Subject to SURAT Jurisdiction.',
-    'Amount of Tax Subject to Reverse Charges.',
-    'Our Liability & responsibility ceases as soon as the goods leave our premises.',
-    'Goods once sold will not be taken back in any cases.',
-    'No allowances for shortages or difference in quality will be allowed unless the notice for the same is given within 24 hrs after rejection of Goods.',
-    'Subject to the Ankleshwar Jurisdiction.',
   ],
   declaration:
     'We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.',
@@ -30,17 +35,16 @@ export const COMPANY = {
 /**
  * INVOICE APPEARANCE CONFIGURATION
  * Edit these values to change the look of generated invoices.
- * These settings are NOT editable from the form UI — manage them here only.
  */
 export const APPEARANCE = {
   /** Main brand color used for banners, headers, totals, and accents */
-  primaryColor: '#8B1A1A',
+  primaryColor: '#7A1C1C',
   /** Light background color for alternating rows */
-  secondaryColor: '#f5f5f5',
+  secondaryColor: '#f9f9f9',
   /** Background color of product table header row */
-  tableHeaderColor: '#8B1A1A',
+  tableHeaderColor: '#7A1C1C',
   /** Font family applied to the generated invoice */
-  fontFamily: "'Arial', sans-serif",
+  fontFamily: 'var(--font-poppins), Poppins, sans-serif',
   /** Path or URL to the company logo shown on the invoice */
   logoUrl: '/logo.png',
 } as const;

@@ -5,6 +5,18 @@ import type { ComputedProduct, InvoiceFormData, InvoiceTotals } from '../../lib/
 import { COMPANY, APPEARANCE } from '../../lib/constants';
 import { formatCurrency } from '../../lib/calculations';
 import { amountInWords } from '../../lib/amountInWords';
+import {
+  MapPin,
+  Phone,
+  Mail,
+  FileText,
+  Truck,
+  User,
+  UserCheck,
+  IndianRupee,
+  Landmark,
+  ScrollText,
+} from 'lucide-react';
 
 interface Props {
   formData: InvoiceFormData;
@@ -14,6 +26,11 @@ interface Props {
 
 function formatDate(dateStr: string): string {
   if (!dateStr) return '-';
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    // YYYY-MM-DD to DD/MM/YYYY
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
   const d = new Date(dateStr);
   return d.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
@@ -29,7 +46,7 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
   // Build shipping info
   const shippingParty = shippedTo.sameAsBilled ? billedTo : shippedTo;
 
-  // Get distinct CGST/SGST rates from products (for summary)
+  // Distinct rates for breakdown if multiple products have different rates
   const cgstRates = [...new Set(computedProducts.map((p) => p.cgstPct))].filter((r) => r > 0);
   const igstRates = [...new Set(computedProducts.map((p) => p.igstPct))].filter((r) => r > 0);
 
@@ -38,67 +55,78 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
       className="invoice-page gst-invoice"
       style={{ fontFamily: APPEARANCE.fontFamily }}
     >
-      {/* ── HEADER ── */}
+      {/* ── 1. HEADER ── */}
       <div className="inv-header">
         <div className="inv-header-left">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={APPEARANCE.logoUrl} alt="Company Logo" className="inv-logo" />
-          <div className="inv-company-info">
-            <div className="inv-tagline">{COMPANY.tagline}</div>
-          </div>
         </div>
         <div className="inv-header-right">
-          <div className="inv-title" style={{ color: pc }}>TAX INVOICE</div>
+          <div className="inv-title" style={{ color: pc }}>
+            TAX INVOICE
+          </div>
           <div className="inv-copy-boxes">
-            <div className="copy-box"><span className="copy-check">☐</span> Original for Recipient</div>
-            <div className="copy-box"><span className="copy-check">☐</span> Duplicate for Transporter</div>
-            <div className="copy-box"><span className="copy-check">☐</span> Triplicate for Suppliers</div>
+            <div className="copy-box">
+              <span className="copy-checkbox"></span>
+              <span>Original for Recipient</span>
+            </div>
+            <div className="copy-box">
+              <span className="copy-checkbox"></span>
+              <span>Duplicate for Transporter</span>
+            </div>
+            <div className="copy-box">
+              <span className="copy-checkbox"></span>
+              <span>Triplicate for Suppliers</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── ADDRESS BAR ── */}
+      {/* ── 2. ADDRESS BAR ── */}
       <div className="inv-address-bar">
         <div className="inv-addr-item">
-          <span className="addr-icon">📍</span>
+          <MapPin className="inv-icon" size={13} style={{ color: pc }} />
           <span>{COMPANY.address}</span>
         </div>
         <div className="inv-addr-divider">|</div>
         <div className="inv-addr-item">
-          <span className="addr-icon">📞</span>
+          <Phone className="inv-icon" size={13} style={{ color: pc }} />
           <span>{COMPANY.phone}</span>
         </div>
         <div className="inv-addr-divider">|</div>
         <div className="inv-addr-item">
-          <span className="addr-icon">✉</span>
+          <Mail className="inv-icon" size={13} style={{ color: pc }} />
           <span>{COMPANY.email}</span>
         </div>
       </div>
 
-      {/* ── GSTIN BANNER ── */}
-      <div className="inv-gstin-banner">
-        GSTIN : {COMPANY.gstin}
+      {/* ── 3. GSTIN PILL BANNER ── */}
+      <div className="inv-gstin-pill-container">
+        <div className="inv-gstin-pill" style={{ backgroundColor: pc }}>
+          GSTIN : {COMPANY.gstin}
+        </div>
       </div>
 
-      {/* ── INVOICE + TRANSPORT DETAILS ── */}
+      {/* ── 4. INVOICE DETAILS & TRANSPORTATION DETAILS (2-COLUMN) ── */}
       <div className="inv-detail-row">
         {/* Invoice Details */}
         <div className="inv-detail-box">
           <div className="inv-box-header" style={{ backgroundColor: pc }}>
-            <span className="box-icon">🧾</span> INVOICE DETAILS
+            <FileText size={13} className="box-lucide-icon" />
+            <span>INVOICE DETAILS</span>
           </div>
           <div className="inv-box-body">
             <table className="inv-info-table">
               <tbody>
                 <tr>
                   <td className="info-label">Invoice No.</td>
-                  <td>:</td>
-                  <td>{invoiceNo || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{invoiceNo || '-'}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Invoice Date</td>
-                  <td>:</td>
-                  <td>{formatDate(invoiceDate)}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{formatDate(invoiceDate)}</td>
                 </tr>
               </tbody>
             </table>
@@ -112,40 +140,43 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
         {/* Transportation Details */}
         <div className="inv-detail-box">
           <div className="inv-box-header" style={{ backgroundColor: pc }}>
-            <span className="box-icon">🚚</span> TRANSPORTATION DETAILS
+            <Truck size={13} className="box-lucide-icon" />
+            <span>TRANSPORTATION DETAILS</span>
           </div>
           <div className="inv-box-body">
             <table className="inv-info-table">
               <tbody>
                 <tr>
                   <td className="info-label">Transportation Mode</td>
-                  <td>:</td>
-                  <td>{transport.transportMode || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{transport.transportMode || 'LOCAL'}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Transporter Name</td>
-                  <td>:</td>
-                  <td>{transport.transporterName || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{transport.transporterName || 'LOCAL'}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Vehicle Number</td>
-                  <td>:</td>
-                  <td>{transport.vehicleNo || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{transport.vehicleNo || '-'}</td>
                 </tr>
                 <tr>
                   <td className="info-label">PO No.</td>
-                  <td>:</td>
-                  <td>{transport.poNo || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{transport.poNo || '-'}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Date of Supply</td>
-                  <td>:</td>
-                  <td>{transport.dateOfSupply ? formatDate(transport.dateOfSupply) : '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">
+                    {transport.dateOfSupply ? formatDate(transport.dateOfSupply) : '-'}
+                  </td>
                 </tr>
                 <tr>
                   <td className="info-label">Place of Supply</td>
-                  <td>:</td>
-                  <td>{transport.placeOfSupply || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{transport.placeOfSupply || 'SURAT'}</td>
                 </tr>
               </tbody>
             </table>
@@ -153,41 +184,41 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
         </div>
       </div>
 
-      {/* ── BILLED TO + SHIPPED TO ── */}
+      {/* ── 5. BILLED TO & SHIPPED TO (2-COLUMN) ── */}
       <div className="inv-detail-row">
         {/* Billed To */}
         <div className="inv-detail-box">
           <div className="inv-box-header" style={{ backgroundColor: pc }}>
-            <span className="box-icon">👤</span> DETAILS OF RECEIVER / BILLED TO
+            <User size={13} className="box-lucide-icon" />
+            <span>DETAILS OF RECEIVER / BILLED TO</span>
           </div>
           <div className="inv-box-body">
             <table className="inv-info-table">
               <tbody>
                 <tr>
                   <td className="info-label">Name</td>
-                  <td>:</td>
-                  <td className="font-bold">{billedTo.name || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val font-bold">{billedTo.name || '-'}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Address</td>
-                  <td>:</td>
-                  <td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">
                     {billedTo.address}
                     {billedTo.city && `, ${billedTo.city}`}
-                    {billedTo.state && `, ${billedTo.state}`}
                     {billedTo.pincode && `-${billedTo.pincode}`}
                   </td>
                 </tr>
                 <tr>
                   <td className="info-label">GSTIN</td>
-                  <td>:</td>
-                  <td>{billedTo.gstin || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{billedTo.gstin || '-'}</td>
                 </tr>
               </tbody>
             </table>
             <div className="inv-state-row">
-              <span>State : {billedTo.state || '-'}</span>
-              <span>State Code : {billedTo.stateCode || '-'}</span>
+              <span>State : {billedTo.state || 'GUJARAT'}</span>
+              <span>State Code : {billedTo.stateCode || '24'}</span>
             </div>
           </div>
         </div>
@@ -195,83 +226,69 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
         {/* Shipped To */}
         <div className="inv-detail-box">
           <div className="inv-box-header" style={{ backgroundColor: pc }}>
-            <span className="box-icon">📦</span> DETAILS OF CONSIGNEE / SHIPPED TO
+            <UserCheck size={13} className="box-lucide-icon" />
+            <span>DETAILS OF CONSIGNEE / SHIPPED TO</span>
           </div>
           <div className="inv-box-body">
             <table className="inv-info-table">
               <tbody>
                 <tr>
                   <td className="info-label">Name</td>
-                  <td>:</td>
-                  <td className="font-bold">{shippingParty.name || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val font-bold">{shippingParty.name || '-'}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Address</td>
-                  <td>:</td>
-                  <td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">
                     {shippingParty.address}
                     {shippingParty.city && `, ${shippingParty.city}`}
-                    {shippingParty.state && `, ${shippingParty.state}`}
                     {shippingParty.pincode && `-${shippingParty.pincode}`}
                   </td>
                 </tr>
                 <tr>
                   <td className="info-label">GSTIN</td>
-                  <td>:</td>
-                  <td>{shippingParty.gstin || '-'}</td>
+                  <td className="info-sep">:</td>
+                  <td className="info-val">{shippingParty.gstin || '-'}</td>
                 </tr>
               </tbody>
             </table>
             <div className="inv-state-row">
-              <span>State : {shippingParty.state || '-'}</span>
-              <span>State Code : {shippingParty.stateCode || '-'}</span>
+              <span>State : {shippingParty.state || 'GUJARAT'}</span>
+              <span>State Code : {shippingParty.stateCode || '24'}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── PRODUCT TABLE ── */}
-      <table className="inv-product-table gst-product-table" style={{ '--inv-header-color': pc } as React.CSSProperties}>
+      {/* ── 6. PRODUCT TABLE ── */}
+      <table className="inv-product-table gst-product-table">
         <thead>
           <tr style={{ backgroundColor: pc, color: '#fff' }}>
-            <th rowSpan={2} className="col-sr">Sr. No.</th>
+            <th rowSpan={2} className="col-sr">Sr.<br />No.</th>
             <th rowSpan={2} className="col-desc">Description of Goods</th>
-            <th rowSpan={2} className="col-hsn-gst">HSN Code</th>
+            <th rowSpan={2} className="col-hsn">HSN<br />Code</th>
             <th rowSpan={2} className="col-qty">Qty</th>
             <th rowSpan={2} className="col-unit">Unit</th>
             <th rowSpan={2} className="col-rate">Rate</th>
-            <th rowSpan={2} className="col-disc-gst">Disc.</th>
-            <th rowSpan={2} className="col-taxable">Taxable Value</th>
-            {showCGSTSGST && (
-              <>
-                <th colSpan={2} className="text-center">CGST</th>
-                <th colSpan={2} className="text-center">SGST</th>
-              </>
-            )}
-            {showIGST && (
-              <th colSpan={2} className="text-center">IGST</th>
-            )}
-            {taxType === 'none' && <th rowSpan={2}>Amount</th>}
+            <th rowSpan={2} className="col-disc">Disc.</th>
+            <th rowSpan={2} className="col-taxable">Taxable<br />Value</th>
+            <th colSpan={2} className="text-center">CGST</th>
+            <th colSpan={2} className="text-center">SGST</th>
+            <th colSpan={2} className="text-center">IGST</th>
           </tr>
-          {(showCGSTSGST || showIGST) && (
-            <tr style={{ backgroundColor: pc, color: '#fff' }}>
-              {showCGSTSGST && (
-                <>
-                  <th>%</th><th>Amount</th>
-                  <th>%</th><th>Amount</th>
-                </>
-              )}
-              {showIGST && (
-                <>
-                  <th>%</th><th>Amount</th>
-                </>
-              )}
-            </tr>
-          )}
+          <tr style={{ backgroundColor: pc, color: '#fff' }}>
+            <th className="col-tax-pct">%</th>
+            <th className="col-tax-amt">Amount</th>
+            <th className="col-tax-pct">%</th>
+            <th className="col-tax-amt">Amount</th>
+            <th className="col-tax-pct">%</th>
+            <th className="col-tax-amt">Amount</th>
+          </tr>
         </thead>
         <tbody>
           {computedProducts.map((p, i) => (
-            <tr key={p.id} className={i % 2 === 1 ? 'row-alt' : ''}>
+            <tr key={p.id} className={`inv-product-row ${i % 2 === 1 ? 'row-alt' : ''}`}>
               <td className="text-center">{i + 1}</td>
               <td>
                 <div className="prod-name">{p.name}</div>
@@ -279,59 +296,76 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
               </td>
               <td className="text-center">{p.hsn || '-'}</td>
               <td className="text-center">{p.qty}</td>
-              <td className="text-center">{p.unit}</td>
+              <td className="text-center">{p.unit || '-'}</td>
               <td className="text-right">{formatCurrency(p.rate)}</td>
               <td className="text-center">{p.discountPct > 0 ? `${p.discountPct}%` : '-'}</td>
               <td className="text-right">{formatCurrency(p.taxableAmt)}</td>
-              {showCGSTSGST && (
-                <>
-                  <td className="text-center">{p.cgstPct}</td>
-                  <td className="text-right">{formatCurrency(p.cgstAmt)}</td>
-                  <td className="text-center">{p.sgstPct}</td>
-                  <td className="text-right">{formatCurrency(p.sgstAmt)}</td>
-                </>
-              )}
-              {showIGST && (
-                <>
-                  <td className="text-center">{p.igstPct}</td>
-                  <td className="text-right">{formatCurrency(p.igstAmt)}</td>
-                </>
-              )}
-              {taxType === 'none' && <td className="text-right">{formatCurrency(p.total)}</td>}
+
+              {/* CGST */}
+              <td className="text-center">{showCGSTSGST ? `${p.cgstPct}%` : '-'}</td>
+              <td className="text-right">{showCGSTSGST ? formatCurrency(p.cgstAmt) : '-'}</td>
+
+              {/* SGST */}
+              <td className="text-center">{showCGSTSGST ? `${p.sgstPct}%` : '-'}</td>
+              <td className="text-right">{showCGSTSGST ? formatCurrency(p.sgstAmt) : '-'}</td>
+
+              {/* IGST */}
+              <td className="text-center">{showIGST ? `${p.igstPct}%` : '-'}</td>
+              <td className="text-right">{showIGST ? formatCurrency(p.igstAmt) : '-'}</td>
             </tr>
           ))}
+
+          {/* Dynamic blank filler row to stretch vertical borders to bottom */}
+          <tr className="inv-blank-filler-row">
+            <td className="text-center">&nbsp;</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
         </tbody>
         <tfoot>
-          <tr className="inv-total-row" style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>
-            <td colSpan={7} className="text-right">TOTAL</td>
-            <td className="text-right">{formatCurrency(totals.totalTaxable)}</td>
-            {showCGSTSGST && (
-              <>
-                <td></td>
-                <td className="text-right">{formatCurrency(totals.totalCgst)}</td>
-                <td></td>
-                <td className="text-right">{formatCurrency(totals.totalSgst)}</td>
-              </>
-            )}
-            {showIGST && (
-              <>
-                <td></td>
-                <td className="text-right">{formatCurrency(totals.totalIgst)}</td>
-              </>
-            )}
-            {taxType === 'none' && <td className="text-right">{formatCurrency(totals.grandTotal)}</td>}
+          <tr className="inv-total-row">
+            <td colSpan={7} className="text-center font-bold" style={{ color: pc }}>
+              TOTAL
+            </td>
+            <td className="text-right font-bold" style={{ color: pc }}>
+              {formatCurrency(totals.totalTaxable)}
+            </td>
+            <td className="text-center"></td>
+            <td className="text-right font-bold" style={{ color: pc }}>
+              {showCGSTSGST ? formatCurrency(totals.totalCgst) : '-'}
+            </td>
+            <td className="text-center"></td>
+            <td className="text-right font-bold" style={{ color: pc }}>
+              {showCGSTSGST ? formatCurrency(totals.totalSgst) : '-'}
+            </td>
+            <td className="text-center"></td>
+            <td className="text-right font-bold" style={{ color: pc }}>
+              {showIGST ? formatCurrency(totals.totalIgst) : '-'}
+            </td>
           </tr>
         </tfoot>
       </table>
 
-      {/* ── BOTTOM: AMOUNT IN WORDS + BANK + TOTALS ── */}
+      {/* ── 7. BOTTOM: AMOUNT IN WORDS + BANK + DECLARATION & TAX SUMMARY + SIGNATURE ── */}
       <div className="inv-bottom-gst">
         {/* Left column */}
         <div className="inv-bottom-left">
           {/* Amount in Words */}
-          <div className="inv-words-box">
-            <div className="inv-box-header" style={{ backgroundColor: pc }}>
-              <span className="box-icon">₹</span> AMOUNT IN WORDS
+          <div className="inv-box-card">
+            <div className="inv-box-header" style={{ color: pc }}>
+              <IndianRupee size={13} className="box-lucide-icon" />
+              <span>AMOUNT IN WORDS</span>
             </div>
             <div className="inv-box-body">
               <div className="aiw-text">{words}</div>
@@ -339,33 +373,34 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
           </div>
 
           {/* Bank Details */}
-          <div className="inv-bank-box-gst">
-            <div className="inv-box-header" style={{ backgroundColor: pc }}>
-              <span className="box-icon">🏦</span> BANK DETAILS
+          <div className="inv-box-card">
+            <div className="inv-box-header" style={{ color: pc }}>
+              <Landmark size={13} className="box-lucide-icon" />
+              <span>BANK DETAILS</span>
             </div>
             <div className="inv-box-body">
               <table className="inv-bank-table">
                 <tbody>
                   <tr>
-                    <td>NAME</td>
-                    <td>:</td>
-                    <td>{COMPANY.shortName}</td>
-                    <td>IFSC</td>
-                    <td>:</td>
-                    <td>{COMPANY.bank.ifsc}</td>
+                    <td className="bank-lbl">NAME</td>
+                    <td className="bank-sep">:</td>
+                    <td className="bank-val">{COMPANY.shortName}</td>
+                    <td className="bank-lbl">IFSC</td>
+                    <td className="bank-sep">:</td>
+                    <td className="bank-val">{COMPANY.bank.ifsc}</td>
                   </tr>
                   <tr>
-                    <td>A/C</td>
-                    <td>:</td>
-                    <td>{COMPANY.bank.accountNo}</td>
-                    <td>BANK</td>
-                    <td>:</td>
-                    <td>{COMPANY.bank.name}</td>
+                    <td className="bank-lbl">A/C</td>
+                    <td className="bank-sep">:</td>
+                    <td className="bank-val">{COMPANY.bank.accountNo}</td>
+                    <td className="bank-lbl">BANK</td>
+                    <td className="bank-sep">:</td>
+                    <td className="bank-val">{COMPANY.bank.name}</td>
                   </tr>
                   <tr>
-                    <td>BRANCH</td>
-                    <td>:</td>
-                    <td colSpan={4}>{COMPANY.bank.branch}</td>
+                    <td className="bank-lbl">BRANCH</td>
+                    <td className="bank-sep">:</td>
+                    <td colSpan={4} className="bank-val">{COMPANY.bank.branch}</td>
                   </tr>
                 </tbody>
               </table>
@@ -373,9 +408,10 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
           </div>
 
           {/* Declaration */}
-          <div className="inv-declaration-box">
-            <div className="inv-box-header" style={{ backgroundColor: pc }}>
-              <span className="box-icon">📜</span> DECLARATION
+          <div className="inv-box-card">
+            <div className="inv-box-header" style={{ color: pc }}>
+              <ScrollText size={13} className="box-lucide-icon" />
+              <span>DECLARATION</span>
             </div>
             <div className="inv-box-body">
               <p className="declaration-text">{COMPANY.declaration}</p>
@@ -383,83 +419,105 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
           </div>
         </div>
 
-        {/* Right column: Tax summary */}
+        {/* Right column: Tax summary & Signature */}
         <div className="inv-bottom-right">
           <table className="inv-tax-summary">
             <tbody>
               <tr>
                 <td>Total Amount Before Tax</td>
-                <td className="text-right">₹ {formatCurrency(totals.totalTaxable)}</td>
+                <td className="text-right">₹&nbsp;&nbsp;{formatCurrency(totals.totalTaxable)}</td>
               </tr>
-              {showCGSTSGST && cgstRates.map((rate) => (
+              {showCGSTSGST && cgstRates.length > 0 && cgstRates.map((rate) => (
                 <React.Fragment key={`cgst-${rate}`}>
                   <tr>
                     <td>Add : CGST ({rate}%)</td>
                     <td className="text-right">
-                      ₹ {formatCurrency(computedProducts.filter((p) => p.cgstPct === rate).reduce((s, p) => s + p.cgstAmt, 0))}
+                      ₹&nbsp;&nbsp;{formatCurrency(computedProducts.filter((p) => p.cgstPct === rate).reduce((s, p) => s + p.cgstAmt, 0))}
                     </td>
                   </tr>
                   <tr>
                     <td>Add : SGST ({rate}%)</td>
                     <td className="text-right">
-                      ₹ {formatCurrency(computedProducts.filter((p) => p.sgstPct === rate).reduce((s, p) => s + p.sgstAmt, 0))}
+                      ₹&nbsp;&nbsp;{formatCurrency(computedProducts.filter((p) => p.sgstPct === rate).reduce((s, p) => s + p.sgstAmt, 0))}
                     </td>
                   </tr>
                 </React.Fragment>
               ))}
-              {showIGST && igstRates.map((rate) => (
+              {showCGSTSGST && cgstRates.length === 0 && (
+                <>
+                  <tr>
+                    <td>Add : CGST</td>
+                    <td className="text-right">₹&nbsp;&nbsp;{formatCurrency(totals.totalCgst)}</td>
+                  </tr>
+                  <tr>
+                    <td>Add : SGST</td>
+                    <td className="text-right">₹&nbsp;&nbsp;{formatCurrency(totals.totalSgst)}</td>
+                  </tr>
+                </>
+              )}
+              {showIGST && igstRates.length > 0 && igstRates.map((rate) => (
                 <tr key={`igst-${rate}`}>
                   <td>Add : IGST ({rate}%)</td>
                   <td className="text-right">
-                    ₹ {formatCurrency(computedProducts.filter((p) => p.igstPct === rate).reduce((s, p) => s + p.igstAmt, 0))}
+                    ₹&nbsp;&nbsp;{formatCurrency(computedProducts.filter((p) => p.igstPct === rate).reduce((s, p) => s + p.igstAmt, 0))}
                   </td>
                 </tr>
               ))}
+              {showIGST && igstRates.length === 0 && (
+                <tr>
+                  <td>Add : IGST</td>
+                  <td className="text-right">₹&nbsp;&nbsp;{formatCurrency(totals.totalIgst)}</td>
+                </tr>
+              )}
               {!showCGSTSGST && !showIGST && (
                 <tr>
                   <td>Add : Tax</td>
-                  <td className="text-right">₹ 0.00</td>
+                  <td className="text-right">₹&nbsp;&nbsp;0.00</td>
                 </tr>
               )}
             </tbody>
             <tfoot>
               <tr className="grand-total-row" style={{ backgroundColor: pc, color: '#fff' }}>
-                <td>Total Amount After Tax</td>
-                <td className="text-right">₹ {formatCurrency(totals.grandTotal)}</td>
+                <td className="font-bold">Total Amount After Tax</td>
+                <td className="text-right font-bold">₹ {formatCurrency(totals.grandTotal)}</td>
               </tr>
             </tfoot>
           </table>
 
           {/* Signature */}
           <div className="inv-signature-gst">
-            <div className="inv-for-label" style={{ color: pc }}>For, {COMPANY.shortName}</div>
+            <div className="inv-for-label" style={{ color: pc }}>
+              For, {COMPANY.shortName}
+            </div>
             <div className="inv-signature-line"></div>
             <div className="inv-signatory-label">Authorised Signatory</div>
           </div>
         </div>
       </div>
 
-      {/* ── TERMS ── */}
+      {/* ── 8. TERMS AND CONDITIONS (FULL WIDTH) ── */}
       <div className="inv-terms-gst">
-        <div className="inv-box-header" style={{ backgroundColor: pc }}>
-          <span className="box-icon">📋</span> TERMS &amp; CONDITIONS
+        <div className="inv-box-header" style={{ color: pc }}>
+          <div className="flex items-center gap-1.5">
+            <FileText size={13} className="box-lucide-icon" />
+            <span>TERMS AND CONDITIONS</span>
+          </div>
           <span className="terms-eo">(E. &amp; O.E.)</span>
         </div>
         <div className="inv-box-body">
           <div className="terms-cols">
             <ol className="terms-list">
-              {COMPANY.terms.slice(0, 4).map((t, i) => <li key={i}>{t}</li>)}
+              {COMPANY.gstTermsLeft.map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
             </ol>
-            <ol className="terms-list" start={5}>
-              {COMPANY.terms.slice(4).map((t, i) => <li key={i + 4}>{t}</li>)}
+            <ol className="terms-list" start={4}>
+              {COMPANY.gstTermsRight.map((t, i) => (
+                <li key={i + 4}>{t}</li>
+              ))}
             </ol>
           </div>
         </div>
-      </div>
-
-      {/* ── THANK YOU ── */}
-      <div className="inv-thankyou" style={{ color: pc }}>
-        — Thank you for your business! —
       </div>
     </div>
   );
