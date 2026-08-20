@@ -76,13 +76,6 @@ export interface InvoiceTotals {
   grandTotal: number;
 }
 
-export interface AppearanceSettings {
-  primaryColor: string;
-  secondaryColor: string;
-  tableHeaderColor: string;
-  fontFamily: string;
-  logoUrl: string;
-}
 
 export interface InvoiceFormData {
   invoiceType: InvoiceType;
@@ -97,5 +90,4 @@ export interface InvoiceFormData {
   billedTo: PartyDetails;
   shippedTo: ShippedToDetails;
   products: ProductRow[];
-  appearance: AppearanceSettings;
 }

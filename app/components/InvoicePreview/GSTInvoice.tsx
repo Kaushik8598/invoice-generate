@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { ComputedProduct, InvoiceFormData, InvoiceTotals } from '../../lib/types';
-import { COMPANY } from '../../lib/constants';
+import { COMPANY, APPEARANCE } from '../../lib/constants';
 import { formatCurrency } from '../../lib/calculations';
 import { amountInWords } from '../../lib/amountInWords';
 
@@ -19,8 +19,8 @@ function formatDate(dateStr: string): string {
 }
 
 export default function GSTInvoice({ formData, computedProducts, totals }: Props) {
-  const { appearance, billedTo, shippedTo, transport, invoiceNo, invoiceDate, taxType } = formData;
-  const pc = appearance.primaryColor;
+  const { billedTo, shippedTo, transport, invoiceNo, invoiceDate, taxType } = formData;
+  const pc = APPEARANCE.primaryColor;
   const words = amountInWords(totals.grandTotal);
 
   const showCGSTSGST = taxType === 'cgst_sgst';
@@ -36,13 +36,13 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
   return (
     <div
       className="invoice-page gst-invoice"
-      style={{ fontFamily: appearance.fontFamily }}
+      style={{ fontFamily: APPEARANCE.fontFamily }}
     >
       {/* ── HEADER ── */}
       <div className="inv-header">
         <div className="inv-header-left">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={appearance.logoUrl} alt="Company Logo" className="inv-logo" />
+          <img src={APPEARANCE.logoUrl} alt="Company Logo" className="inv-logo" />
           <div className="inv-company-info">
             <div className="inv-tagline">{COMPANY.tagline}</div>
           </div>

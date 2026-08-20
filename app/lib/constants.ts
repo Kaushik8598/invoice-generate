@@ -27,11 +27,21 @@ export const COMPANY = {
     'We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.',
 } as const;
 
-export const DEFAULT_APPEARANCE = {
+/**
+ * INVOICE APPEARANCE CONFIGURATION
+ * Edit these values to change the look of generated invoices.
+ * These settings are NOT editable from the form UI — manage them here only.
+ */
+export const APPEARANCE = {
+  /** Main brand color used for banners, headers, totals, and accents */
   primaryColor: '#8B1A1A',
+  /** Light background color for alternating rows */
   secondaryColor: '#f5f5f5',
+  /** Background color of product table header row */
   tableHeaderColor: '#8B1A1A',
+  /** Font family applied to the generated invoice */
   fontFamily: "'Arial', sans-serif",
+  /** Path or URL to the company logo shown on the invoice */
   logoUrl: '/logo.png',
 } as const;
 

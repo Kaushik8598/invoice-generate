@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import type { InvoiceFormData, ProductRow, ShippedToDetails } from '../../lib/types';
-import { DEFAULT_APPEARANCE } from '../../lib/constants';
 import { computeProduct, computeTotals } from '../../lib/calculations';
 import InvoiceTypeSection from './InvoiceTypeSection';
 import InvoiceDetailsSection from './InvoiceDetailsSection';
@@ -11,7 +10,6 @@ import BilledToSection from './BilledToSection';
 import ShippedToSection from './ShippedToSection';
 import ProductTable from './ProductTable';
 import SummarySection from './SummarySection';
-import AppearanceSection from './AppearanceSection';
 import InvoicePreview from '../InvoicePreview';
 
 function generateId() {
@@ -79,7 +77,6 @@ const DEFAULT_FORM: InvoiceFormData = {
     gstin: '',
   },
   products: [getDefaultProduct()],
-  appearance: { ...DEFAULT_APPEARANCE },
 };
 
 interface ValidationErrors {
@@ -115,9 +112,6 @@ export default function InvoiceForm() {
     setFormData((prev) => ({ ...prev, shippedTo: { ...prev.shippedTo, [field]: value } as ShippedToDetails }));
   }, []);
 
-  const handleAppearance = useCallback((field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, appearance: { ...prev.appearance, [field]: value } }));
-  }, []);
 
   // Product operations
   const handleAddProduct = useCallback(() => {
@@ -268,10 +262,6 @@ export default function InvoiceForm() {
           invoiceType={formData.invoiceType}
         />
 
-        <AppearanceSection
-          data={formData.appearance}
-          onChange={handleAppearance}
-        />
 
         {/* Action Buttons */}
         <div className="form-actions">
