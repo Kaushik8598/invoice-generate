@@ -17,9 +17,9 @@ function generateId() {
   return `prod-${Date.now()}-${prodCounter++}`;
 }
 
-function getDefaultProduct(): ProductRow {
+function getDefaultProduct(customId?: string): ProductRow {
   return {
-    id: 'prod-1',
+    id: customId || generateId(),
     name: '',
     description: '',
     hsn: '',
