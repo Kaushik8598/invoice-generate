@@ -1,22 +1,22 @@
 'use client';
 
 import React from 'react';
-import type { ProductRow, TaxType } from '../../lib/types';
+import type { ProductRow, TaxType, InvoiceType } from '../../lib/types';
 import { computeProduct, formatCurrency } from '../../lib/calculations';
 import { UNITS, GST_RATES } from '../../lib/constants';
 
 interface Props {
   products: ProductRow[];
   taxType: TaxType;
-  invoiceType: 'regular' | 'gst';
+  invoiceType: InvoiceType;
   onAdd: () => void;
   onRemove: (id: string) => void;
   onChange: (id: string, field: keyof ProductRow, value: string | number) => void;
 }
 
 export default function ProductTable({ products, taxType, invoiceType, onAdd, onRemove, onChange }: Props) {
-  const isRegular = invoiceType === 'regular';
-  const showTax = !isRegular && taxType !== 'none';
+  const showSize = invoiceType === 'regular' || invoiceType === 'both';
+  const showTax = (invoiceType === 'gst' || invoiceType === 'both') && taxType !== 'none';
   const showCGSTSGST = showTax && taxType === 'cgst_sgst';
   const showIGST = showTax && taxType === 'igst';
 
@@ -33,7 +33,7 @@ export default function ProductTable({ products, taxType, invoiceType, onAdd, on
             <tr>
               <th className="col-sr">Sr.</th>
               <th className="col-product">Product / Description</th>
-              {isRegular && <th className="col-size">Size</th>}
+              {showSize && <th className="col-size">Size</th>}
               <th className="col-hsn">HSN/SAC</th>
               <th className="col-qty">Qty</th>
               <th className="col-unit">Unit</th>
@@ -67,7 +67,7 @@ export default function ProductTable({ products, taxType, invoiceType, onAdd, on
                         onChange={(e) => onChange(row.id, 'description', e.target.value)}
                       />
                     </td>
-                    {isRegular && (
+                    {showSize && (
                       <td className="col-size">
                         <input
                           type="text"

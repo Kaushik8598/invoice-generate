@@ -39,10 +39,20 @@ export default function InvoiceTypeSection({ data, onChange }: Props) {
               />
               <span className="radio-label">GST Invoice</span>
             </label>
+            <label className="radio-option">
+              <input
+                type="radio"
+                name="invoiceType"
+                value="both"
+                checked={data.invoiceType === 'both'}
+                onChange={(e) => onChange('invoiceType', e.target.value)}
+              />
+              <span className="radio-label">Both (Regular + GST)</span>
+            </label>
           </div>
         </div>
 
-        {data.invoiceType === 'gst' && (
+        {(data.invoiceType === 'gst' || data.invoiceType === 'both') && (
           <div className="field-group">
             <label className="field-label">Tax Type <span className="required">*</span></label>
             <div className="radio-group">

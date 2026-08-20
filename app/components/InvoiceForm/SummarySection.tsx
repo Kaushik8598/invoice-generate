@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { ComputedProduct, InvoiceTotals, TaxType } from '../../lib/types';
+import type { ComputedProduct, InvoiceTotals, TaxType, InvoiceType } from '../../lib/types';
 import { formatCurrencyWithSymbol } from '../../lib/calculations';
 import { amountInWords } from '../../lib/amountInWords';
 
@@ -9,11 +9,11 @@ interface Props {
   products: ComputedProduct[];
   totals: InvoiceTotals;
   taxType: TaxType;
-  invoiceType: 'regular' | 'gst';
+  invoiceType: InvoiceType;
 }
 
 export default function SummarySection({ totals, taxType, invoiceType }: Props) {
-  const showTax = invoiceType === 'gst' && taxType !== 'none';
+  const showTax = (invoiceType === 'gst' || invoiceType === 'both') && taxType !== 'none';
   const showCGSTSGST = showTax && taxType === 'cgst_sgst';
   const showIGST = showTax && taxType === 'igst';
   const words = amountInWords(totals.grandTotal);

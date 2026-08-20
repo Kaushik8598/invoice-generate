@@ -100,10 +100,13 @@ export default function InvoiceForm() {
     }));
   }, []);
 
+  // Determine effective tax type (GST taxes active for both 'gst' and 'both' modes)
+  const effectiveTaxType = formData.invoiceType === 'regular' ? 'none' : formData.taxType;
+
   // Computed products and totals
   const computedProducts = useMemo(
-    () => formData.products.map((p) => computeProduct(p, formData.invoiceType === 'gst' ? formData.taxType : 'none')),
-    [formData.products, formData.taxType, formData.invoiceType]
+    () => formData.products.map((p) => computeProduct(p, effectiveTaxType)),
+    [formData.products, effectiveTaxType]
   );
   const totals = useMemo(() => computeTotals(computedProducts), [computedProducts]);
 
@@ -223,7 +226,7 @@ export default function InvoiceForm() {
           onChange={handleTopField}
         />
 
-        {formData.invoiceType === 'gst' && (
+        {(formData.invoiceType === 'gst' || formData.invoiceType === 'both') && (
           <TransportDetailsSection
             data={formData.transport}
             onChange={handleTransport}
@@ -235,7 +238,7 @@ export default function InvoiceForm() {
           onChange={handleBilledTo}
         />
 
-        {formData.invoiceType === 'gst' && (
+        {(formData.invoiceType === 'gst' || formData.invoiceType === 'both') && (
           <ShippedToSection
             data={formData.shippedTo}
             billedTo={formData.billedTo}
@@ -245,7 +248,7 @@ export default function InvoiceForm() {
 
         <ProductTable
           products={formData.products}
-          taxType={formData.invoiceType === 'gst' ? formData.taxType : 'none'}
+          taxType={formData.invoiceType === 'regular' ? 'none' : formData.taxType}
           invoiceType={formData.invoiceType}
           onAdd={handleAddProduct}
           onRemove={handleRemoveProduct}
@@ -255,7 +258,7 @@ export default function InvoiceForm() {
         <SummarySection
           products={computedProducts}
           totals={totals}
-          taxType={formData.invoiceType === 'gst' ? formData.taxType : 'none'}
+          taxType={formData.invoiceType === 'regular' ? 'none' : formData.taxType}
           invoiceType={formData.invoiceType}
         />
 

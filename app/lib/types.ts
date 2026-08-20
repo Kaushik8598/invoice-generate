@@ -1,4 +1,4 @@
-export type InvoiceType = 'regular' | 'gst';
+export type InvoiceType = 'regular' | 'gst' | 'both';
 export type TaxType = 'none' | 'cgst_sgst' | 'igst';
 
 export interface TransportDetails {
