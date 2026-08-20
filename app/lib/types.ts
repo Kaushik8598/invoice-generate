@@ -82,10 +82,6 @@ export interface InvoiceFormData {
   taxType: TaxType;
   invoiceNo: string;
   invoiceDate: string;
-  dueDate: string;
-  placeOfSupply: string;
-  referenceNo: string;
-  paymentTerms: string;
   transport: TransportDetails;
   billedTo: PartyDetails;
   shippedTo: ShippedToDetails;

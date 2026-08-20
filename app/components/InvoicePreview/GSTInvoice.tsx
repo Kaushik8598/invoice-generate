@@ -100,20 +100,6 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
                   <td>:</td>
                   <td>{formatDate(invoiceDate)}</td>
                 </tr>
-                {formData.dueDate && (
-                  <tr>
-                    <td className="info-label">Due Date</td>
-                    <td>:</td>
-                    <td>{formatDate(formData.dueDate)}</td>
-                  </tr>
-                )}
-                {formData.referenceNo && (
-                  <tr>
-                    <td className="info-label">Reference No.</td>
-                    <td>:</td>
-                    <td>{formData.referenceNo}</td>
-                  </tr>
-                )}
               </tbody>
             </table>
             <div className="inv-state-row">
@@ -164,7 +150,7 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
                 <tr>
                   <td className="info-label">Place of Supply</td>
                   <td>:</td>
-                  <td>{transport.placeOfSupply || formData.placeOfSupply || '-'}</td>
+                  <td>{transport.placeOfSupply || '-'}</td>
                 </tr>
               </tbody>
             </table>

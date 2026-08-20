@@ -33,15 +33,22 @@ function getDefaultProduct(): ProductRow {
 
 const today = new Date().toISOString().split('T')[0];
 
+/** Generate a date-based invoice number: INV-YYYYMMDD-XXX */
+function generateInvoiceNo(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  // Random 3-digit suffix as a placeholder until backend provides a real sequence
+  const seq = String(Math.floor(Math.random() * 900) + 100);
+  return `INV-${y}${m}${d}-${seq}`;
+}
+
 const DEFAULT_FORM: InvoiceFormData = {
   invoiceType: 'gst',
   taxType: 'cgst_sgst',
-  invoiceNo: '',
+  invoiceNo: generateInvoiceNo(),
   invoiceDate: today,
-  dueDate: '',
-  placeOfSupply: '',
-  referenceNo: '',
-  paymentTerms: '',
   transport: {
     transporterName: '',
     vehicleNo: '',
@@ -135,7 +142,6 @@ export default function InvoiceForm() {
   // Validation
   function validate(): boolean {
     const errs: ValidationErrors = {};
-    if (!formData.invoiceNo.trim()) errs.invoiceNo = 'Invoice number is required.';
     if (!formData.invoiceDate) errs.invoiceDate = 'Invoice date is required.';
     if (!formData.billedTo.name.trim()) errs['billedTo.name'] = 'Customer name is required.';
     if (!formData.billedTo.address.trim()) errs['billedTo.address'] = 'Billing address is required.';
@@ -218,10 +224,6 @@ export default function InvoiceForm() {
           data={{
             invoiceNo: formData.invoiceNo,
             invoiceDate: formData.invoiceDate,
-            dueDate: formData.dueDate,
-            placeOfSupply: formData.placeOfSupply,
-            referenceNo: formData.referenceNo,
-            paymentTerms: formData.paymentTerms,
           }}
           onChange={handleTopField}
         />

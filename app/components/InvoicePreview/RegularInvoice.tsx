@@ -113,20 +113,6 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
                   <td>:</td>
                   <td>{formatDate(invoiceDate)}</td>
                 </tr>
-                {formData.referenceNo && (
-                  <tr>
-                    <td className="info-label">Ref No.</td>
-                    <td>:</td>
-                    <td>{formData.referenceNo}</td>
-                  </tr>
-                )}
-                {formData.placeOfSupply && (
-                  <tr>
-                    <td className="info-label">Place of Supply</td>
-                    <td>:</td>
-                    <td>{formData.placeOfSupply}</td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
