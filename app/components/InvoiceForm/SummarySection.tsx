@@ -12,16 +12,11 @@ interface Props {
   invoiceType: 'regular' | 'gst';
 }
 
-export default function SummarySection({ products, totals, taxType, invoiceType }: Props) {
+export default function SummarySection({ totals, taxType, invoiceType }: Props) {
   const showTax = invoiceType === 'gst' && taxType !== 'none';
   const showCGSTSGST = showTax && taxType === 'cgst_sgst';
   const showIGST = showTax && taxType === 'igst';
   const words = amountInWords(totals.grandTotal);
-
-  // Determine a single CGST/SGST rate (display the most common rate for reference)
-  const cgstRate = products.length > 0 ? products[0].cgstPct : 0;
-  const sgstRate = products.length > 0 ? products[0].sgstPct : 0;
-  const igstRate = products.length > 0 ? products[0].igstPct : 0;
 
   return (
     <div className="form-section">
@@ -50,24 +45,29 @@ export default function SummarySection({ products, totals, taxType, invoiceType 
             <span className="summary-label">Taxable Amount</span>
             <span className="summary-value">{formatCurrencyWithSymbol(totals.totalTaxable)}</span>
           </div>
+
+          {/* CGST + SGST */}
           {showCGSTSGST && (
             <>
               <div className="summary-row text-tax">
-                <span className="summary-label">CGST @ {cgstRate}%</span>
+                <span className="summary-label">CGST</span>
                 <span className="summary-value">{formatCurrencyWithSymbol(totals.totalCgst)}</span>
               </div>
               <div className="summary-row text-tax">
-                <span className="summary-label">SGST @ {sgstRate}%</span>
+                <span className="summary-label">SGST</span>
                 <span className="summary-value">{formatCurrencyWithSymbol(totals.totalSgst)}</span>
               </div>
             </>
           )}
+
+          {/* IGST */}
           {showIGST && (
             <div className="summary-row text-tax">
-              <span className="summary-label">IGST @ {igstRate}%</span>
+              <span className="summary-label">IGST</span>
               <span className="summary-value">{formatCurrencyWithSymbol(totals.totalIgst)}</span>
             </div>
           )}
+
           <div className="summary-row summary-grand-total">
             <span className="summary-label">Grand Total</span>
             <span className="summary-value">{formatCurrencyWithSymbol(totals.grandTotal)}</span>
