@@ -339,19 +339,50 @@ body {
   text-align: right;
 }
 
+.product-table-wrapper {
+  overflow-x: auto;
+  padding: 0 1rem 0.5rem;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.825rem;
+}
+
+.product-table th {
+  padding: 0.6rem 0.4rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 2px solid #e0e0e0;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 0.78rem;
+}
+
 .product-table th.col-sr,
-.product-table th.col-unit {
+.product-table th.col-unit,
+.product-table th.col-size,
+.product-table th.col-hsn,
+.product-table th.col-qty,
+.product-table th.col-disc,
+.product-table th.col-gst {
   text-align: center;
 }
 
+.product-table th.col-rate,
+.product-table th.col-amount {
+  text-align: right;
+}
+
 .product-row td {
-  padding: 0.5rem 0.4rem;
+  padding: 0.4rem 0.35rem;
   border-bottom: 1px solid #f0f0f0;
   vertical-align: top;
 }
 
 .product-tax-row td {
-  padding: 0 0.4rem 0.5rem;
+  padding: 0 0.35rem 0.4rem;
   border-bottom: 1px solid #f0f0f0;
   background: #fafafa;
 }
@@ -372,26 +403,28 @@ body {
 
 .table-input {
   width: 100%;
-  padding: 0.35rem 0.4rem;
-  border: 1px solid transparent;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid #d0d7de;
   border-radius: 4px;
   font-size: 0.8rem;
   font-family: var(--font);
-  background: transparent;
+  background: #ffffff;
   transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
 }
 
 .table-input:focus {
   outline: none;
   border-color: var(--primary);
   background: #fff;
-  box-shadow: 0 0 0 2px rgba(139, 26, 26, 0.08);
+  box-shadow: 0 0 0 2px rgba(139, 26, 26, 0.12);
 }
 
 .table-input-desc {
-  margin-top: 0.2rem;
-  font-size: 0.72rem;
+  margin-top: 0.25rem;
+  font-size: 0.74rem;
   color: var(--text-muted);
+  border-style: dashed;
 }
 
 .table-select {
@@ -447,47 +480,49 @@ body {
   cursor: not-allowed;
 }
 
-.col-sr {
-  width: 40px;
+/* Form Product Table Scoped Column Widths */
+.product-table .col-sr {
+  width: 34px;
 }
 
-.col-product {
-  min-width: 180px;
+.product-table .col-product {
+  width: 22%;
+  min-width: 140px;
 }
 
-.col-size {
-  width: 70px;
-}
-
-.col-hsn {
+.product-table .col-size {
   width: 80px;
 }
 
-.col-qty {
-  width: 70px;
+.product-table .col-hsn {
+  width: 85px;
 }
 
-.col-unit {
-  width: 70px;
+.product-table .col-qty {
+  width: 75px;
 }
 
-.col-rate {
-  width: 90px;
+.product-table .col-unit {
+  width: 75px;
 }
 
-.col-disc {
-  width: 60px;
-}
-
-.col-gst {
-  width: 65px;
-}
-
-.col-amount {
+.product-table .col-rate {
   width: 95px;
 }
 
-.col-action {
+.product-table .col-disc {
+  width: 70px;
+}
+
+.product-table .col-gst {
+  width: 75px;
+}
+
+.product-table .col-amount {
+  width: 100px;
+}
+
+.product-table .col-action {
   width: 32px;
 }
 
@@ -1155,44 +1190,84 @@ body {
   margin-top: 1px;
 }
 
-.col-sr {
+/* GST Invoice Preview Table Column Widths (Increased Description Width) */
+.gst-product-table .col-sr {
+  width: 24px;
+}
+
+.gst-product-table .col-desc {
+  text-align: left !important;
+  min-width: 140px;
+}
+
+.gst-product-table .col-hsn {
+  width: 50px;
+}
+
+.gst-product-table .col-qty {
   width: 28px;
 }
 
-.col-desc {
-  text-align: left !important;
-}
-
-.col-hsn {
-  width: 55px;
-}
-
-.col-qty {
+.gst-product-table .col-unit {
   width: 32px;
 }
 
-.col-unit {
-  width: 38px;
+.gst-product-table .col-rate {
+  width: 54px;
 }
 
-.col-rate {
-  width: 62px;
-}
-
-.col-disc {
-  width: 38px;
-}
-
-.col-taxable {
-  width: 68px;
-}
-
-.col-tax-pct {
+.gst-product-table .col-disc {
   width: 30px;
 }
 
-.col-tax-amt {
+.gst-product-table .col-taxable {
   width: 56px;
+}
+
+.gst-product-table .col-tax-pct {
+  width: 26px;
+}
+
+.gst-product-table .col-tax-amt {
+  width: 50px;
+}
+
+/* Regular Invoice Preview Table Column Widths (Reduced Description Width, Balanced Other Columns) */
+.regular-product-table .col-sr {
+  width: 28px;
+  text-align: center;
+}
+
+.regular-product-table .col-desc,
+.regular-product-table .col-product-name {
+  text-align: left !important;
+  width: 40%;
+}
+
+.regular-product-table .col-size {
+  width: 65px;
+  text-align: center;
+}
+
+.regular-product-table .col-hsn {
+  width: 75px;
+  text-align: center;
+}
+
+.regular-product-table .col-qty {
+  width: 60px;
+  text-align: center;
+}
+
+.regular-product-table .col-rate {
+  width: 80px;
+  text-align: right;
+}
+
+.regular-product-table .col-taxable,
+.regular-product-table .col-amount {
+  width: 90px;
+  text-align: right;
 }
 
 .inv-total-row td {
@@ -1388,6 +1463,167 @@ ol {
   padding: 2px 0 0;
   margin-top: 1px;
   flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   REGULAR INVOICE SPECIFIC LAYOUT
+───────────────────────────────────────── */
+.inv-header-center {
+  width: 100%;
+  justify-content: center;
+
+  .inv-logo {
+    height: 120px;
+    max-width: 300px;
+  }
+}
+
+.inv-reg-top-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 0.85fr;
+  gap: 6px;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.inv-reg-card {
+  border: 1px solid #7A1C1C;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.inv-reg-card-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2.5px 6px;
+  color: #ffffff;
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.inv-reg-card-body {
+  padding: 4px 6px;
+}
+
+.inv-reg-tax-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 7.5pt;
+  margin-top: 3px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 2px;
+}
+
+.inv-reg-bottom-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 6px;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.inv-bank-table-reg {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 7.5pt;
+}
+
+.inv-bank-table-reg td {
+  padding: 1.5px 2px;
+  vertical-align: top;
+}
+
+.inv-reg-totals-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.inv-reg-totals-table {
+  width: 100%;
+  border-collapse: collapse;
+  outline: 1px solid #7A1C1C;
+  border-radius: 3px;
+  overflow: auto;
+  font-size: 7.8pt;
+  background: #ffffff;
+}
+
+.inv-reg-totals-table td {
+  padding: 2.5px 6px;
+  border-bottom: 1px solid #7A1C1C;
+  color: #111;
+}
+
+.inv-reg-totals-table tfoot tr.grand-total-row td {
+  background-color: #7A1C1C !important;
+  color: #ffffff !important;
+  font-size: 8.8pt;
+  font-weight: 800;
+  padding: 4px 6px;
+  border: none !important;
+}
+
+.inv-reg-words-box {
+  border: 1px solid #7A1C1C;
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-size: 7.8pt;
+  margin-bottom: 4px;
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.inv-reg-footer-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: end;
+  margin-bottom: 2px;
+  font-size: 7.8pt;
+  background: rgb(255, 255, 255);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(122, 28, 28);
+  border-image: none;
+  border-radius: 3px;
+  padding: 3px 6px;
+}
+
+.inv-reg-terms-left {
+  font-size: 7pt;
+}
+
+.inv-reg-terms-title {
+  font-weight: 700;
+  font-size: 7.5pt;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.inv-reg-sign-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-bottom: 2px;
+}
+
+.col-product-name {
+  text-align: left !important;
+}
+
+.col-size {
+  width: 50px;
+}
+
+.col-amount {
+  width: 90px;
 }
 
 /* ─────────────────────────────────────────

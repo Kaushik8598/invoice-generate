@@ -6,7 +6,7 @@ export const COMPANY = {
   phone: '9033377931',
   email: 'shivgraphics111@gmail.com',
   gstin: '24CSQPM5914H1ZF',
-  pan: 'AACCS1234A',
+  pan: '-',
   bank: {
     name: 'HDFC BANK',
     accountNo: '50200073187088',
