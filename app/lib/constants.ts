@@ -47,6 +47,7 @@ export const APPEARANCE = {
   fontFamily: 'var(--font-poppins), Poppins, sans-serif',
   /** Path or URL to the company logo shown on the invoice */
   logoUrl: '/logo.png',
+  gstlogoUrl: '/gst-logo.png',
 } as const;
 
 export const UNITS = [
