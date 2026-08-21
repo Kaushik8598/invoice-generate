@@ -16,16 +16,19 @@ export default function InvoiceDetailsSection({ data, onChange }: Props) {
         Invoice Information
       </h2>
       <div className="form-grid">
-        {/* Invoice Number — auto-generated, read-only */}
+        {/* Invoice Number — editable with auto-generated default */}
         <div className="field-group">
-          <label className="field-label">Invoice Number</label>
-          <div className="auto-field">
-            <span className="auto-field-value" suppressHydrationWarning>
-              {data.invoiceNo}
-            </span>
-            <span className="auto-field-badge">Auto Generated</span>
-          </div>
-          {/* <span className="field-hint">Will be assigned from the backend once implemented.</span> */}
+          <label htmlFor="invoiceNo" className="field-label">
+            Invoice Number <span className="required">*</span>
+          </label>
+          <input
+            id="invoiceNo"
+            type="text"
+            className="form-input"
+            placeholder="e.g. INV-20260821-001"
+            value={data.invoiceNo}
+            onChange={(e) => onChange('invoiceNo', e.target.value)}
+          />
         </div>
 
         {/* Invoice Date — user sets this */}

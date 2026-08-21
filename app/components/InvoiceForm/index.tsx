@@ -150,6 +150,7 @@ export default function InvoiceForm() {
   // Validation
   function validate(): boolean {
     const errs: ValidationErrors = {};
+    if (!formData.invoiceNo.trim()) errs.invoiceNo = 'Invoice number is required.';
     if (!formData.invoiceDate) errs.invoiceDate = 'Invoice date is required.';
     if (!formData.billedTo.name.trim()) errs['billedTo.name'] = 'Customer name is required.';
     if (!formData.billedTo.address.trim()) errs['billedTo.address'] = 'Billing address is required.';

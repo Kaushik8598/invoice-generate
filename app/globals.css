@@ -972,8 +972,8 @@ body {
 }
 
 .inv-logo {
-  height: 60px;
-  max-width: 230px;
+  height: 100px;
+  max-width: 300px;
   object-fit: contain;
 }
 
@@ -1534,7 +1534,7 @@ ol {
 
   .inv-logo {
     height: 120px;
-    max-width: 300px;
+    max-width: 350px;
   }
 }
 

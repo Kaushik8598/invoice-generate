@@ -22,6 +22,7 @@ export default function ShippedToSection({ data, billedTo, onChange }: Props) {
       onChange('pincode', billedTo.pincode);
       onChange('phone', billedTo.phone);
       onChange('gstin', billedTo.gstin);
+      onChange('email', billedTo.email);
     }
   };
 

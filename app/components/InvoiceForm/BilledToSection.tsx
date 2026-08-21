@@ -116,18 +116,6 @@ export default function BilledToSection({ data, onChange }: Props) {
         </div>
 
         <div className="field-group">
-          <label htmlFor="billedEmail" className="field-label">Email</label>
-          <input
-            id="billedEmail"
-            type="email"
-            className="form-input"
-            placeholder="customer@example.com"
-            value={data.email}
-            onChange={(e) => onChange('email', e.target.value)}
-          />
-        </div>
-
-        <div className="field-group">
           <label htmlFor="billedGstin" className="field-label">GSTIN</label>
           <input
             id="billedGstin"
@@ -137,6 +125,18 @@ export default function BilledToSection({ data, onChange }: Props) {
             maxLength={15}
             value={data.gstin}
             onChange={(e) => onChange('gstin', e.target.value.toUpperCase())}
+          />
+        </div>
+
+        <div className="field-group">
+          <label htmlFor="billedEmail" className="field-label">Email</label>
+          <input
+            id="billedEmail"
+            type="email"
+            className="form-input"
+            placeholder="customer@example.com"
+            value={data.email}
+            onChange={(e) => onChange('email', e.target.value)}
           />
         </div>
       </div>
