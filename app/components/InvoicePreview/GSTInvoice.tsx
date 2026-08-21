@@ -59,7 +59,7 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
       <div className="inv-header">
         <div className="inv-header-left">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={APPEARANCE.logoUrl} alt="Company Logo" className="inv-logo" />
+          <img src={APPEARANCE.gstlogoUrl} alt="Company Logo" className="inv-logo" />
         </div>
         <div className="inv-header-right">
           <div className="inv-title" style={{ color: pc }}>
