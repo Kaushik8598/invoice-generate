@@ -209,6 +209,13 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
                     {billedTo.pincode && `-${billedTo.pincode}`}
                   </td>
                 </tr>
+                {billedTo.phone && (
+                  <tr>
+                    <td className="info-label">Mobile No.</td>
+                    <td className="info-sep">:</td>
+                    <td className="info-val">{billedTo.phone}</td>
+                  </tr>
+                )}
                 <tr>
                   <td className="info-label">GSTIN</td>
                   <td className="info-sep">:</td>
@@ -246,6 +253,13 @@ export default function GSTInvoice({ formData, computedProducts, totals }: Props
                     {shippingParty.pincode && `-${shippingParty.pincode}`}
                   </td>
                 </tr>
+                {shippingParty.phone && (
+                  <tr>
+                    <td className="info-label">Mobile No.</td>
+                    <td className="info-sep">:</td>
+                    <td className="info-val">{shippingParty.phone}</td>
+                  </tr>
+                )}
                 <tr>
                   <td className="info-label">GSTIN</td>
                   <td className="info-sep">:</td>

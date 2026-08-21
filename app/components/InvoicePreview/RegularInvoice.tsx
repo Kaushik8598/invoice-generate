@@ -106,6 +106,11 @@ export default function RegularInvoice({ formData, computedProducts, totals }: P
               {billedTo.state && `, ${billedTo.state}`}
               {billedTo.pincode && `-${billedTo.pincode}`}
             </div>
+            {billedTo.phone && (
+              <div className="inv-customer-phone">
+                <span>Mo. &nbsp;:</span> <strong>{billedTo.phone}</strong>
+              </div>
+            )}
             <div className="inv-gst-pan mt-1 flex flex-col gap-0.5">
               <div><span>GST NO. &nbsp;:</span> <strong> {billedTo.gstin || '-'}</strong></div>
               <div><span>PAN NO. &nbsp;:</span> <strong> {COMPANY.pan || '-'}</strong></div>
